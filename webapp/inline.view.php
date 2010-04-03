@@ -30,6 +30,17 @@ if (!isset($_REQUEST['d']) ) {
 }
 
 $s = new SmartyThinkTank();
+//Pagination
+$count = 15;
+if (isset($_REQUEST['page'])) {
+    $page = $_REQUEST['page'];
+} else {
+    $page = 1;
+}
+if ($page > 1) {
+    $s->assign('prev_page', $page - 1);
+}
+
 
 if(!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user']."-".$_REQUEST['d'])) {
 
@@ -51,12 +62,25 @@ if(!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user'].
 	// pass data to smarty
 	switch ($_REQUEST['d']) {
 		case "tweets-all":
+                        $totals = $pd->getTotalPostsByUser($i->network_user_id, $count);
+                        if ($totals['total_pages'] > $page) {
+                            $s->assign('next_page', $page + 1);
+                        }
+                        $s->assign('current_page', $page);
+                        $s->assign('total_pages', $totals['total_pages']);
 			$s->assign('header', 'All Posts' );
-			$s->assign('all_tweets', $pd->getAllPosts($i->network_user_id, 15) );
+                        $s->assign('next_page', 2);
+			$s->assign('all_tweets', $pd->getAllPosts($i->network_user_id, $count, $page) );
 			break;
 		case "tweets-mostreplies":
+                        $totals = $pd->getTotalPostsByUser($i->network_user_id, $count);
+                        if ($totals['total_pages'] > $page) {
+                            $s->assign('next_page', $page + 1);
+                        }
+                        $s->assign('current_page', $page);
+                        $s->assign('total_pages', $totals['total_pages']);
 			$s->assign('header', 'Most Replied-To Posts' );
-			$s->assign('most_replied_to_tweets', $pd->getMostRepliedToPosts($i->network_user_id, 15));
+			$s->assign('most_replied_to_tweets', $pd->getMostRepliedToPosts($i->network_user_id, $page, $count));
 			break;
 		case "tweets-mostretweeted":
 			$s->assign('header', 'Most Forwarded' );

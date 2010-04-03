@@ -54,6 +54,7 @@
 {if $load neq 'no'}
 {literal}	
 	$(document).ready(function(){
+
 		//References
 		var sections = $(".menu li");
 		
@@ -103,10 +104,10 @@
 			//load selected section
 			switch(this.id){
 				case "tweets-all": {/literal}
-					tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d=tweets-all", hideLoading);
+					tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d=tweets-all&page=1", hideLoading);
 					break;
 				case "tweets-mostreplies":
-					tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d=tweets-mostreplies", hideLoading);
+					tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d=tweets-mostreplies&page=1", hideLoading);
 					break;
 				case "tweets-mostretweeted":
 					tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d=tweets-mostretweeted", hideLoading);

@@ -367,7 +367,8 @@ class PostDAO extends MySQLDAO {
         return mysql_affected_rows();
     }
     
-    function getAllPosts($author_id, $count) {
+    function getAllPosts($author_id, $count, $page = 1) {
+        $start_on_record = ($page - 1) * $count;
         $q = "
 			SELECT 
 				l.*, t.*, pub_date - interval #gmt_offset# hour as adj_pub_date 
@@ -380,7 +381,7 @@ class PostDAO extends MySQLDAO {
 				author_user_id = ".$author_id."
 			ORDER BY 
 				pub_date DESC 
-			LIMIT ".$count.";";
+			LIMIT ".$start_on_record.", ".$count.";";
 			
         $sql_result = $this->executeSQL($q);
         $all_posts = array();
@@ -411,10 +412,10 @@ class PostDAO extends MySQLDAO {
         return $all_posts;
     }
     
-    function getTotalPostsByUser($userid) {
+    function getTotalPostsByUser($userid, $count = 15) {
         $q = "
 			SELECT 
-				COUNT(*) as total 
+				COUNT(*) as total, ceil(count(*) / $count) as total_pages
 			FROM 
 				#prefix#posts t
 			WHERE 
@@ -423,7 +424,7 @@ class PostDAO extends MySQLDAO {
 				pub_date ASC";
         $sql_result = $this->executeSQL($q);
         $row = mysql_fetch_assoc($sql_result);
-        return $row["total"];
+        return $row;
     }
     
     function getStatusSources($author_id) {
@@ -493,7 +494,8 @@ class PostDAO extends MySQLDAO {
     }
 
     
-    function getMostRepliedToPosts($user_id, $count) {
+    function getMostRepliedToPosts($user_id, $page, $count) {
+        $start_on_record = ($page - 1) * $count;
         $q = "
 			SELECT 
 				l.*, t.* , pub_date - interval #gmt_offset# hour as adj_pub_date 
@@ -506,7 +508,7 @@ class PostDAO extends MySQLDAO {
 				author_user_id = ".$user_id."
 			ORDER BY
 				mention_count_cache DESC 
-			LIMIT ".$count.";";
+			LIMIT ".$start_on_record.", ".$count.";";
         $sql_result = $this->executeSQL($q);
         $most_replied_to_posts = array();
         while ($row = mysql_fetch_assoc($sql_result)) {

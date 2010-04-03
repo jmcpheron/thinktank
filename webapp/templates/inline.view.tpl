@@ -2,6 +2,34 @@
     <!--{if $header}<h1>{$header}</h1>{/if}-->
     <!--{if $description}<h4>{$description}</h4>{/if}-->
 </div>
+<div class="float-r prepend pages">
+<script>
+		{literal}
+	$(document).ready(function(){
+		var tweets_content = $("#tweets_content");
+    $("span#next_page").click(function () {
+		{/literal}
+			tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d={$smarty.get.d}&page={$next_page}");
+    });
+		{literal}
+    $("span#prev_page").click(function () {
+		{/literal}
+			tweets_content.load("inline.view.php?u={$smarty.session.network_username}&d={$smarty.get.d}&page={$prev_page}");
+    });
+
+});
+</script>
+    {if $prev_page}
+        <span class="menu-item" id="prev_page" >&lt;Prev</span>
+    {/if} 
+    {if $prev_page or $next_page} 
+    Page {$current_page} of {$total_pages} 
+    {/if}
+    {if $next_page}
+        <span class="menu-item" id="next_page" >Next&gt;</span>
+    {/if}
+
+</div>
 	{if ($display eq 'tweets-all' and not $all_tweets) or 
 		($display eq 'tweets-mostreplies' and not $most_replied_to_tweets) or
 		($display eq 'tweets-mostretweeted' and not $most_retweeted) or
