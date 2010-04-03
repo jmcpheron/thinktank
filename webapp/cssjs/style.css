@@ -125,4 +125,5 @@ text-align: center;
 .submenu {padding-left : 20px;}
 #sidemenu {display : none;}
 
+span:hover{color: #0060e0;cursor: pointer;border-top:2px solid #0060e0;}  
 
