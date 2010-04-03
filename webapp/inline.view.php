@@ -69,7 +69,6 @@ if(!$s->is_cached('inline.view.tpl', $i->network_username."-".$_SESSION['user'].
                         $s->assign('current_page', $page);
                         $s->assign('total_pages', $totals['total_pages']);
 			$s->assign('header', 'All Posts' );
-                        $s->assign('next_page', 2);
 			$s->assign('all_tweets', $pd->getAllPosts($i->network_user_id, $count, $page) );
 			break;
 		case "tweets-mostreplies":
